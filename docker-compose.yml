@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  #
+  # config image https://hub.docker.com/_/mysql
+  mysql:
+    image: mysql:5.7
+    hostname: mysql
+    container_name: symf_mysql
+    environment:
+      MYSQL_DATABASE: symfony_sql
+      MYSQL_USER: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3309:3306"
+  #
+  # config image https://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-dev.html
+  php-fpm:
+    image: webdevops/php-dev:7.3
+    hostname: php-fpm
+    container_name: symf_php-fpm
+    volumes:
+      - "./:/app"
+    working_dir: "/app"
+    depends_on:
+      - mysql
+  #
+  # config image https://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-nginx.html
+  nginx:
+    image: webdevops/nginx
+    hostname: nginx
+    container_name: symf_nginx
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+      WEB_DOCUMENT_INDEX: index.php
+      WEB_PHP_SOCKET: php-fpm:9000
+    ports:
+      - "8001:80"
+    volumes:
+      - "./:/app"
+    depends_on:
+      - php-fpm
+
