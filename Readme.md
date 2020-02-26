@@ -7,16 +7,18 @@ sudo apt install docker-compose
 docker-compose -v
 ```
 
-Run project:
+Run project in terminal:
  - on dev with terminal layout
 ```bash
-docker-compose -d up
+docker-compose up -d 
 ```
 
 - on production
 ```bash
 docker-compose up
 ```
+
+On browser open http://localhost:8001/
 
 # Base commands 
 
@@ -27,3 +29,5 @@ docker-compose up
 docker-compose ps -a #list all docker containers
 docker-compose down
 ```
+
+More info with using docker containers <a href="./Documentation/docker.sh">here</a>.
