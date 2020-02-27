@@ -18,6 +18,6 @@ class StartController extends AbstractController{
         $connection->connect();
         $doctrineStatus = $connection->isConnected()? 'connected' : 'not connected';
 
-        return new Response('Start page. <br/> Doctrine is' . $doctrineStatus);
+        return new Response('Start page. <br/> Doctrine is ' . $doctrineStatus);
     }
 }

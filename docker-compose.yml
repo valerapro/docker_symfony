@@ -40,4 +40,14 @@ services:
       - "./:/app"
     depends_on:
       - php-fpm
+  #
+  # Auto install vendors
+  composer:
+    restart: "no"
+    image: composer:1.8.5
+    container_name: symf_composer
+    command: install --ignore-platform-reqs
+    working_dir: /app
+    volumes:
+      - "./:/app"
 
