@@ -13,10 +13,14 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - "3309:3306"
+    networks:
+      - mysql
+
   #
   # config image https://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-dev.html
   php-fpm:
     image: webdevops/php-dev:7.3
+#    build: ./docker/config/php-fpm
     hostname: php-fpm
     container_name: symf_php-fpm
     volumes:
@@ -24,6 +28,10 @@ services:
     working_dir: "/app"
     depends_on:
       - mysql
+    networks:
+      - mysql
+      - php-fpm
+
   #
   # config image https://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-nginx.html
   nginx:
@@ -40,6 +48,9 @@ services:
       - "./:/app"
     depends_on:
       - php-fpm
+    networks:
+      - php-fpm
+
   #
   # Auto install vendors
   composer:
@@ -51,3 +62,53 @@ services:
     volumes:
       - "./:/app"
 
+  #
+  # config image
+  # https://www.elastic.co/guide/en/elasticsearch/reference/7.5/docker.html
+  # https://hub.docker.com/_/elasticsearch
+  elasticsearch:
+    container_name: symf_elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.2
+    environment:
+      discovery.type: "single-node"
+    ports:
+      - "9200:9200"
+    networks:
+      elk_stack:
+        aliases:
+          - "elasticsearch"
+
+  #
+  # config image
+  # https://hub.docker.com/_/logstash
+  # https://www.elastic.co/guide/en/logstash/current/docker-config.html
+  logstash:
+    container_name: symf_logstash
+    image: docker.elastic.co/logstash/logstash:7.4.2
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk_stack
+
+  #
+  # config image https://hub.docker.com/_/kibana
+  kibana:
+    container_name: symf_kibana
+    depends_on:
+      - elasticsearch
+    image: docker.elastic.co/kibana/kibana:7.4.2
+    environment:
+      SERVER_NAME: localhost
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - elk_stack
+    ports:
+      - "81:5601"
+
+#
+# config image
+# https://docs.docker.com/compose/networking/#specify-custom-networks
+networks:
+  mysql:
+  php-fpm:
+  elk_stack:

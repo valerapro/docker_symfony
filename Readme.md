@@ -1,4 +1,4 @@
-#  Installation environment and first run
+###  Installation environment and first run
 
 Install docker-compose on Ubuntu 18:
 
@@ -20,7 +20,7 @@ docker-compose up
 
 On browser open http://localhost:8001/
 
-# Base commands 
+### Base commands 
 
 ```bash
 docker-compose -h
@@ -30,4 +30,13 @@ docker-compose ps -a #list all docker containers
 docker-compose down
 ```
 
-More info with using docker containers <a href="./Documentation/docker.sh">here</a>.
+More info with using docker containers <a href="./docker/documentation/docker.sh">here</a>.
+
+### Task list for project
+
+- [x] Base docs for Docker adn docker-compose
+- [x] Implement Symfony to docker container NGINX
+- [ ] Implement MySQL to docker container
+- [ ] Config xdebug
+- [ ] Implement Elastic Search and Kibana
+- [ ] Implement Kubernetes 
